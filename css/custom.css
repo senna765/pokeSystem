@@ -1,7 +1,8 @@
 .navbar {
     background: #1E90FF;
-    box-shadow: 0px 0px 5px #888888;
+    box-shadow: 0px 3px 10px #888888;
     padding: 15px 0;
+    border: none;
 }
 a {
     color: white!important;
@@ -22,6 +23,7 @@ a:focus {
 .jumbotron {
     text-align: center;
     background-color: gainsboro;
+    box-shadow: 0px 3px 10px #888888;
 }
 .input-group {
     text-align: center;

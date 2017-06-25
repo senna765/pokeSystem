@@ -6,40 +6,48 @@ function filterText($text) {
 }
 
 session_start();
-$_SESSION['message'] = '';
+$_SESSION['error'] = '';
 //the form has been submitted with post method
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    //Against removing required attr by inspect element
+    if (!empty($_POST['username'] && $_POST['first_name'] && $_POST['last_name'] && $_POST['email'] && $_POST['password'])) {
     //check if two passwords are equal to each other
     if ($_POST['password'] == $_POST['confirmpassword']) {
         if (preg_match('/^(?=.*[A-Z])(?=.*\d).*$/', $_POST['password'])) {//check regex for uppercase letter and number
             //define other variables with submitted values from $_POST
-            $username = $mysqli->real_escape_string($_POST['username']);
-            $first_name = $mysqli->real_escape_string($_POST['first_name']);
-            $last_name = $mysqli->real_escape_string($_POST['last_name']);
-            $email = $mysqli->real_escape_string($_POST['email']);
-            //md5 hash password for security
-            $password = $mysqli->escape_string(password_hash($_POST['password'], PASSWORD_BCRYPT));
-            $hash = $mysqli->escape_string(md5(rand(0, 1000)));
-            //set session variables to display on index page
-            $_SESSION['username'] = $username;
+            $hash = md5(rand(0, 1000));
             //create SQL query string for inserting data into the database
+            $username = $mysqli->escape_string($_POST['username']);
             $sql = $mysqli->query("SELECT username FROM users WHERE username='$username'") or die($mysqli->error);
             if ($sql->num_rows != 0) {
-                $_SESSION['message'] = "Toks vartotojas jau egzistuoja!";
+                $_SESSION['error'] = "Toks vartotojas jau egzistuoja!";
             } else {
-                $sql = "INSERT INTO users(username, first_name, last_name, email, password, hash) "
-                        . "VALUES('$username', '$first_name', '$last_name', '$email', '$password','$hash')" or die($mysqli->error);
-                if ($mysqli->query($sql)) {
+                if (!($stmt = $mysqli->prepare("INSERT INTO users (username, first_name, last_name, email, password, hash) "
+                        . "VALUES(?, ?, ?, ?, ?, ?)"))) {
+                    echo "Prepare failed: (" . $mysqli->errno . ")" . $mysqli->error;
+                }
+                if (!$stmt->bind_param("ssssss", $_POST['username'], $_POST['first_name'], $_POST['last_name'], 
+                        $_POST['email'], password_hash($_POST['password'], PASSWORD_BCRYPT), $hash)) {
+                    echo "Binding parameters failed: (" . $stmt->errno . ")" . $stmt->error;
+                }
+                if (!$stmt->execute()) {
+                    echo "Execute failed: (" . $stmt->errno . ")" . $stmt->error;
+                } else {
+                    $stmt->close();
+                    $_SESSION['username'] = $username;
                     $_SESSION['message'] = "Jūs sėkmingai užsiregistravote";
                     $_SESSION['logged_in'] = true; // So we know the user has logged in
                     header("location: index.php");
                 }
             }
         } else {
-            $_SESSION['message'] = "Slaptažodį turi sudaryti viena didžioji raidė ir skaičius!";
+            $_SESSION['error'] = "Slaptažodį turi sudaryti viena didžioji raidė ir skaičius!";
         }
     } else {
-        $_SESSION['message'] = "Nesutampa slaptažodis";
+        $_SESSION['error'] = "Nesutampa slaptažodis!";
+    }
+    } else {
+        $_SESSION['error'] = "Visi laukai yra privalomi!";
     }
 }
 ?>
@@ -49,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/custom.css" rel="stylesheet">
-        <script src="js/remove.js"></script>
+        <script src="js/inputRequired.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <meta charset="utf-8">
@@ -68,8 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="col-xs-12 col-md-6 col-md-offset-3">
                     <form class="form-horizontal" role="form" method="post">
                         <div class="jumbotron">
-                            <?php if ($_SESSION['message'] != "") { ?>
-                                <div class="alert alert-danger"><?= $_SESSION['message'] ?></div>
+                            <?php if ($_SESSION['error'] != "") { ?>
+                                <div class="alert alert-danger"><?= $_SESSION['error'] ?></div>
                             <?php } ?>
                             <h2>Registracija</h2>
                             <div class="form-group">

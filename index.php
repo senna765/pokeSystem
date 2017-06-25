@@ -5,6 +5,12 @@ session_start();
 if ($_SESSION['logged_in'] != 1) {
     header("location: login.php");
 }
+function sanitizeString($var) {
+    $var = stripslashes($var);
+    $var = strip_tags($var);
+    $var = htmlentities($var);
+    return $var;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +37,7 @@ if ($_SESSION['logged_in'] != 1) {
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="profile.php"><span class="glyphicon glyphicon-user"></span><?= $_SESSION['username'] ?></a></li>
+                        <li><a href="profile.php"><span class="glyphicon glyphicon-user"></span><?= sanitizeString($_SESSION['username']) ?></a></li>
                         <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span>Atsijungti</a></li>
                     </ul>
                 </div>
@@ -68,9 +74,9 @@ if ($_SESSION['logged_in'] != 1) {
                                         <div class="wrapper title-comment">
                                             <form class="form-horizontal" role="form" name="table" method="post" data-counter="<?=$users['id'] ?>">
 						<input class="hidden" type="text" name="id" value="<?=$users['id']?>">
-                                                <div class="column comment"><?= $users['first_name'] ?><input class="hidden" type="text" name="first_name"></div>
-                                                <div class="column comment"><?= $users['last_name'] ?><input class="hidden" type="text" name="last_name"></div>
-                                                <div class="column comment"><?= $users['email'] ?><input class="hidden" type="email" name="email" id="email_<?=$users['id']?>" value="<?=$users['email']?>"></div>
+                                                <div class="column comment"><?= sanitizeString($users['first_name'])?><input class="hidden" type="text" name="first_name"></div>
+                                                <div class="column comment"><?= sanitizeString($users['last_name']) ?><input class="hidden" type="text" name="last_name"></div>
+                                                <div class="column comment"><?= sanitizeString($users['email']) ?><input class="hidden" type="email" name="email" id="email_<?=$users['id']?>" value="<?=$users['email']?>"></div>
                                                 <div class="column comment"><input class="clear" type="text" name="poke" id="poke_<?php echo $users['id'] ?>" value="<?=$users['poke']?>"></div>
                                                 <div class="column comment"><input class="btn btn-primary registerbutton" type="submit" value="Poke" id="submit_<?=$users['id']?>" name="submit"></div>
                                         </div>

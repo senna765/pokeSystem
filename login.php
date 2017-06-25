@@ -1,10 +1,8 @@
 <?php
 require('db.php');
 session_start();
-$_SESSION['message'] = '';
+$_SESSION['error'] = '';
 //the form has been submitted with post method
-
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['login'])) { //user logging in
         /* User login process, checks if user exists and password is correct */
@@ -12,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $username = $mysqli->escape_string($_POST['username']);
         $sql = $mysqli->query("SELECT * FROM users WHERE username='$username'") or die($mysqli->error);
         if ($sql->num_rows == 0) { // User doesn't exist
-            $_SESSION['message'] = "Vartotojas su tokiu vartotojo vardu neegzistuoja!";
+            $_SESSION['error'] = "Vartotojas su tokiu vartotojo vardu neegzistuoja!";
         } else { // User exists
             $user = $sql->fetch_assoc();
             if (password_verify($_POST['password'], $user['password'])) {
@@ -22,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 //redirect user to index.php
                 header("location: index.php");
             } else {
-                $_SESSION['message'] = "Įvedėte blogą slaptažodį, bandykite dar kartą!";
+                $_SESSION['error'] = "Įvedėte blogą slaptažodį, bandykite dar kartą!";
             }
         }
     }
@@ -39,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <link href="css/custom.css" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
-        <script src="js/remove.js"></script>
+        <script src="js/inputRequired.js"></script>
         <meta charset="utf-8">
         <title>Prisijungimo forma</title>
     </head>
@@ -61,8 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="col-xs-12 col-md-6 col-md-offset-3">
                     <form class="form-horizontal" role="form" method="post">
                         <div class="jumbotron">
-                            <?php if ($_SESSION['message'] != "") { ?>
-                                <div class="alert alert-danger"><?= $_SESSION['message'] ?></div>
+                            <?php if ($_SESSION['error'] != "") { ?>
+                                <div class="alert alert-danger"><?= $_SESSION['error'] ?></div>
                             <?php } ?>
                             <h2>Prisijungimas</h2>
                             <div class="form-group">
@@ -77,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                             <div class="form-group">
                                 <input type="submit" class="btn btn-success loginbutton" name="login" value="Prisijungti">
-                                <input type="submit" class="btn btn-primary loginbutton" name="register" value="Registruotis" onclick="return foo()">
+                                <input type="submit" class="btn btn-primary loginbutton" name="register" value="Registruotis" onclick="window.location.href='register.php'">
                             </div>
                         </div>
                     </form>
