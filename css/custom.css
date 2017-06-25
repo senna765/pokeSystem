@@ -1,0 +1,143 @@
+.navbar {
+    background: #1E90FF;
+    box-shadow: 0px 0px 5px #888888;
+    padding: 15px 0;
+}
+a {
+    color: white!important;
+}
+a:hover,
+a:focus {
+    color:#666666!important;
+}
+.navbar-toggle {
+    background:#ffffff;
+    border: 1px solid #080808!important;
+}
+.navbar-toggle:hover,
+.navbar-toggle:focus {
+    background: #000000!important;
+    border: none!important;
+}
+.jumbotron {
+    text-align: center;
+    background-color: gainsboro;
+}
+.input-group {
+    text-align: center;
+    margin: 0 auto;
+}
+.btn {
+    box-shadow: 0px 1px 5px #888888;
+}
+.btn-primary {
+    background:	#1E90FF;
+}
+.btn-success {
+    background: #32CD32;
+}
+.registerbutton {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.loginbutton {
+    padding-left: 30px;
+    padding-right: 30px;
+    margin: 10px;
+}
+/*
+ * Define the widths: play around with these 
+ * to get a best fit.
+ */
+/*
+ * Basic styles, good for a large display. Everything fits in
+ * one row, no wrapping. All text based cells grow equally.
+ */
+.table-row {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: row;
+  -webkit-flex-direction: row;
+  flex-wrap: no-wrap;
+  -webkit-flex-wrap: no-wrap;
+  width: 100%;
+}
+.wrapper {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: row;
+  -webkit-flex-direction: row;
+  padding: 5px 0;
+}
+.column {
+  flex-grow: 0;
+  -webkit-flex-grow: 0;
+  flex-shrink: 0;
+  -webkit-flex-shrink: 0;
+  vertical-align: top;
+  width: 145px;
+}
+/* growable wrappers */
+.title-comment,
+.title-comment-module-reporter,
+.attributes {
+  flex-grow: 1;
+  -webkit-flex-grow: 1;
+}
+/*
+ * Media queries: optimize for different screen widths.
+ */
+/*
+ * Media breaks.
+ */
+@media all and (max-width: 1236px) {
+  .title-comment {
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    width: 220px;
+  }
+  .title-comment div {
+    flex-grow: 0;
+    -webkit-flex-grow: 0;
+  }
+  .title-comment > div {
+    width: 100%;
+  }
+}
+@media all and (max-width: 528px) {
+  .table-row {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .attributes {
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    width: 220px;
+  }
+  .attributes div {
+    flex-grow: 0;
+    -webkit-flex-grow: 0;
+  }
+  .attributes > div {
+    width: 100%;
+  }
+  }
+/*
+ * General good-look styles
+ */
+.table-row {
+  border-bottom: solid #cccccc 1px;
+  border-collapse: collapse;
+  padding-top: 2px;
+}
+.table-row.header {
+  font-weight: bold;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.clear {
+    pointer-events:none;   
+    background-color: gainsboro;
+    border:none;
+    text-align: center;
+}
